@@ -71,6 +71,66 @@ redisClient.on "ready", =>
       assert.strictEqual resp, "item"
     )
 
+    # sadd set-key item => 1
+    redisClient.sadd("set-key", "item", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 0
+    )
+
+    # sadd set-key item2 => 2
+    redisClient.sadd("set-key", "item2", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 1
+    )
+
+    # sadd set-key item3 => 3
+    redisClient.sadd("set-key", "item3", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 0
+    )
+
+    # sadd set-key item => 3
+    redisClient.sadd("set-key", "item", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 0
+    )
+
+    # smembers set-key =>
+    redisClient.smembers("set-key", (err, resp)=>
+      console.log resp
+      assert.strictEqual getType(resp), "Array"
+    )
+
+    # sismember set-key item4 =>
+    redisClient.sismember("set-key", "item4", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 0
+    )
+
+    # sismember set-key item =>
+    redisClient.sismember("set-key", "item", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 1
+    )
+
+    # srem set-key item2 =>
+    redisClient.srem("set-key", "item2", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 1
+    )
+
+    # srem set-key item2 =>
+    redisClient.srem("set-key", "item2", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 0
+    )
+
+    # smembers set-key =>
+    redisClient.smembers("set-key", (err, resp)=>
+      console.log resp
+      assert.strictEqual getType(resp), "Array"
+    )
+
 redisClient.on "error", (err) =>
   console.dir err
   process.exit 1
