@@ -131,6 +131,50 @@ redisClient.on "ready", =>
       assert.strictEqual getType(resp), "Array"
     )
 
+    # hset hash-key sub-key1 value1 =>
+    redisClient.hset("hash-key", "sub-key1", "value1", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 0
+    )
+
+    # hset hash-key sub-key2 value2 =>
+    redisClient.hset("hash-key", "sub-key2", "value2", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 1
+    )
+
+    # hset hash-key sub-key1 value1 =>
+    redisClient.hset("hash-key", "sub-key1", "value1", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 0
+    )
+
+    # hgetall hash-key =>
+    redisClient.hgetall("hash-key", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp["sub-key1"], "value1"
+      assert.strictEqual resp["sub-key2"], "value2"
+    )
+
+    # hdel hash-key sub-key2 =>
+    redisClient.hdel("hash-key", "sub-key2", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 1
+    )
+
+    # hdel hash-key sub-key2 =>
+    redisClient.hdel("hash-key", "sub-key2", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 0
+    )
+
+    # hgetall hash-key =>
+    redisClient.hgetall("hash-key", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp["sub-key1"], "value1"
+      assert.strictEqual resp["sub-key2"], undefined
+    )
+
 redisClient.on "error", (err) =>
   console.dir err
   process.exit 1
