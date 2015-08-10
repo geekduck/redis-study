@@ -193,6 +193,60 @@ redisClient.on "ready", =>
       assert.strictEqual resp, 1
     )
 
+    # zadd zset-key 728 member1 =>
+    redisClient.zadd("zset-key", 728, "member1", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 1
+    )
+
+    # zadd zset-key 982 member0 =>
+    redisClient.zadd("zset-key", 982, "member0", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 1
+    )
+
+    # zadd zset-key 982 member0 =>
+    redisClient.zadd("zset-key", 982, "member0", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 0
+    )
+
+    # zrange zset-key 0 -1 withscores =>
+    redisClient.zrange("zset-key", 0, -1, "withscores", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp.length, 4
+    )
+
+    # zrangebyscore zset-key 0 800 withscores =>
+    redisClient.zrangebyscore("zset-key", 0, 800, "withscores", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp.length, 2
+    )
+
+    # zrem zset-key member1 => 1
+    redisClient.zrem("zset-key", "member1", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 1
+    )
+
+    # zrem zset-key member1 => 0
+    redisClient.zrem("zset-key", "member1", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 0
+    )
+
+    # zrangebyscore zset-key 0 800 withscores =>
+    redisClient.zrange("zset-key", 0, -1, "withscores", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp.length, 2
+    )
+
+    # del set-key => 1
+    redisClient.del("zset-key", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 1
+    )
+
 redisClient.on "error", (err) =>
   console.dir err
   process.exit 1
