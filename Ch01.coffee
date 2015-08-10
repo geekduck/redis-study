@@ -71,10 +71,16 @@ redisClient.on "ready", =>
       assert.strictEqual resp, "item"
     )
 
+    # del list-key => "OK"
+    redisClient.del("list-key", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 1
+    )
+
     # sadd set-key item => 1
     redisClient.sadd("set-key", "item", (err, resp)=>
       console.log resp
-      assert.strictEqual resp, 0
+      assert.strictEqual resp, 1
     )
 
     # sadd set-key item2 => 2
@@ -86,7 +92,7 @@ redisClient.on "ready", =>
     # sadd set-key item3 => 3
     redisClient.sadd("set-key", "item3", (err, resp)=>
       console.log resp
-      assert.strictEqual resp, 0
+      assert.strictEqual resp, 1
     )
 
     # sadd set-key item => 3
@@ -131,10 +137,16 @@ redisClient.on "ready", =>
       assert.strictEqual getType(resp), "Array"
     )
 
+    # del set-key => 1
+    redisClient.del("set-key", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 1
+    )
+
     # hset hash-key sub-key1 value1 =>
     redisClient.hset("hash-key", "sub-key1", "value1", (err, resp)=>
       console.log resp
-      assert.strictEqual resp, 0
+      assert.strictEqual resp, 1
     )
 
     # hset hash-key sub-key2 value2 =>
@@ -173,6 +185,12 @@ redisClient.on "ready", =>
       console.log resp
       assert.strictEqual resp["sub-key1"], "value1"
       assert.strictEqual resp["sub-key2"], undefined
+    )
+
+    # del set-key => 1
+    redisClient.del("hash-key", (err, resp)=>
+      console.log resp
+      assert.strictEqual resp, 1
     )
 
 redisClient.on "error", (err) =>
